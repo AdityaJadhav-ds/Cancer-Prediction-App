@@ -95,7 +95,7 @@ if st.button('🔍 Predict'):
 
     st.subheader("📊 Prediction Result")
     # Correct label mapping
-    if prediction == 0:
+    if prediction == 'B':
         st.success("✅ The model predicts: **No Cancer (Benign)**")
     else:
         st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
