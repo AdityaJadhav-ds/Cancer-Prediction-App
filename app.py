@@ -66,7 +66,7 @@ data = {
     'concave points_worst': st.sidebar.number_input('Concave Points Worst', 0.0, 1.0, 0.25),
     'symmetry_worst': st.sidebar.number_input('Symmetry Worst', 0.0, 1.0, 0.40),
     'fractal_dimension_worst': st.sidebar.number_input('Fractal Dimension Worst', 0.0, 1.0, 0.12)
-}
+       }
     return pd.DataFrame(data, index=[0])
 
 input_df = user_input_features()
