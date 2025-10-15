@@ -137,6 +137,17 @@ if st.button('🔍 Predict'):
             st.success("✅ The model predicts: **No Cancer (Benign)**")
 
 
+    except AttributeError:
+        # Fallback for models without predict_proba (like SVM without probability=True)
+        prediction = model.predict(input_df)[0]
+
+        st.subheader("📊 Prediction Result")
+        if prediction == 1:
+            st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
+        else:
+            st.success("✅ The model predicts: **No Cancer (Benign)**")
+
+
 
         # Probability chart
         proba_df = pd.DataFrame({
