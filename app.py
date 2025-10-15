@@ -3,8 +3,9 @@ import pickle
 import pandas as pd
 import plotly.express as px
 
-# --- Load the trained model ---
+# --- Load trained model and scaler ---
 model = pickle.load(open('Cancer_prediction_model_nb.pkl', 'rb'))
+scaler = pickle.load(open('scaler.pkl', 'rb'))  # Make sure you save the scaler during training
 
 # --- Page configuration ---
 st.set_page_config(
@@ -16,7 +17,7 @@ st.set_page_config(
 
 # --- App Title ---
 st.markdown(
-    "<h1 style='text-align: center; color: red;'>🧬 Cancer Prediction App</h1>",
+    "<h1 style='text-align: center; color: darkblue;'>🧬 Cancer Prediction App</h1>",
     unsafe_allow_html=True
 )
 st.markdown(
@@ -60,7 +61,6 @@ def user_input_features():
         'symmetry_worst': st.sidebar.number_input('Symmetry Worst', 0.0, 1.0, 0.25),
         'fractal_dimension_worst': st.sidebar.number_input('Fractal Dimension Worst', 0.0, 1.0, 0.08)
     }
-
     features = pd.DataFrame(feature_data, index=[0])
     return features
 
@@ -72,22 +72,24 @@ st.dataframe(input_df)
 
 # --- Prediction ---
 if st.button('🔍 Predict'):
-    prediction = model.predict(input_df)[0]
-    prediction_proba = model.predict_proba(input_df)[0]
+    # 1️⃣ Scale input
+    input_scaled = scaler.transform(input_df)
+
+    # 2️⃣ Make prediction
+    prediction = model.predict(input_scaled)[0]
+    prediction_proba = model.predict_proba(input_scaled)[0]
 
     st.subheader("📊 Prediction Result")
-
     if prediction == 1:
         st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
     else:
         st.success("✅ The model predicts: **No Cancer (Benign)**")
 
-    # Prediction probabilities chart
+    # 3️⃣ Probability chart
     proba_df = pd.DataFrame({
         'Condition': ['Benign', 'Malignant'],
         'Probability': prediction_proba
     })
-
     fig = px.bar(
         proba_df,
         x='Condition',
