@@ -105,22 +105,39 @@ feature_ranges = {
 # --- Prediction ---
 if st.button('🔍 Predict'):
     out_of_range = False
+
+    # ✅ Check if any input is out of the allowed feature range
     for col in input_df.columns:
         min_val, max_val = feature_ranges[col]
         if input_df[col][0] < min_val or input_df[col][0] > max_val:
             out_of_range = True
             break
 
+    # ✅ Handle out-of-range case
+    if out_of_range:
+        st.warning("⚠️ Some input values are out of the valid feature range. Please check and try again.")
     
-    elif:
-        prediction = model.predict(input_df)[0]
-        prediction_proba = model.predict_proba(input_df)[0]
+    # ✅ Safe prediction (handles both models with and without predict_proba)
+    else:
+        try:
+            prediction = model.predict(input_df)[0]
+            prediction_proba = model.predict_proba(input_df)[0]
 
-        st.subheader("📊 Prediction Result")
-        if prediction == 1:
-            st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
-        else:
-            st.success("✅ The model predicts: **No Cancer (Benign)**")
+            st.subheader("📊 Prediction Result")
+            if prediction == 1:
+                st.error(f"⚠️ The model predicts: **Cancer Detected (Malignant)** \n\n🔢 Probability: {prediction_proba[1]:.2f}")
+            else:
+                st.success(f"✅ The model predicts: **No Cancer (Benign)** \n\n🔢 Probability: {prediction_proba[0]:.2f}")
+
+        except AttributeError:
+            # if predict_proba() is not available
+            prediction = model.predict(input_df)[0]
+            st.subheader("📊 Prediction Result")
+            if prediction == 1:
+                st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
+            else:
+                st.success("✅ The model predicts: **No Cancer (Benign)**")
+
 
         # Probability chart
         proba_df = pd.DataFrame({
