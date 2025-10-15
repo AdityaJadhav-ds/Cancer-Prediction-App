@@ -114,29 +114,28 @@ if st.button('🔍 Predict'):
             break
 
     # ✅ Handle out-of-range case
-    if out_of_range:
-        st.warning("⚠️ Some input values are out of the valid feature range. Please check and try again.")
-    
-    # ✅ Safe prediction (handles both models with and without predict_proba)
-    else:
-        try:
-            prediction = model.predict(input_df)[0]
-            prediction_proba = model.predict_proba(input_df)[0]
+ if st.button('🔍 Predict'):
+    try:
+        # Try using predict_proba (if available)
+        prediction = model.predict(input_df)[0]
+        prediction_proba = model.predict_proba(input_df)[0]
 
-            st.subheader("📊 Prediction Result")
-            if prediction == 1:
-                st.error(f"⚠️ The model predicts: **Cancer Detected (Malignant)** \n\n🔢 Probability: {prediction_proba[1]:.2f}")
-            else:
-                st.success(f"✅ The model predicts: **No Cancer (Benign)** \n\n🔢 Probability: {prediction_proba[0]:.2f}")
+        st.subheader("📊 Prediction Result")
+        if prediction == 1:
+            st.error(f"⚠️ The model predicts: **Cancer Detected (Malignant)** \n\n🔢 Probability: {prediction_proba[1]:.2f}")
+        else:
+            st.success(f"✅ The model predicts: **No Cancer (Benign)** \n\n🔢 Probability: {prediction_proba[0]:.2f}")
 
-        except AttributeError:
-            # if predict_proba() is not available
-            prediction = model.predict(input_df)[0]
-            st.subheader("📊 Prediction Result")
-            if prediction == 1:
-                st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
-            else:
-                st.success("✅ The model predicts: **No Cancer (Benign)**")
+    except AttributeError:
+        # Fallback for models without predict_proba (like SVM without probability=True)
+        prediction = model.predict(input_df)[0]
+
+        st.subheader("📊 Prediction Result")
+        if prediction == 1:
+            st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
+        else:
+            st.success("✅ The model predicts: **No Cancer (Benign)**")
+
 
 
         # Probability chart
