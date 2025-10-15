@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 
 # --- Load your trained model ---
-model = pickle.load(open('Cancer_prediction_model_nb.pkl', 'rb'))
+model = pickle.load(open('Cancer_prediction_model_svm.pkl', 'rb'))
 
 # --- Page configuration ---
 st.set_page_config(
