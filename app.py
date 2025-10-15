@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 # --- Title & description ---
-st.markdown("<h1 style='text-align:center; color:darkblue;'>🧬 Cancer Prediction App</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center; color:darkred;'>🧬 Cancer Prediction App</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center;'>Predict whether a patient has <b>Cancer</b> based on medical input features.</p>", unsafe_allow_html=True)
 
 # --- Sidebar input ---
