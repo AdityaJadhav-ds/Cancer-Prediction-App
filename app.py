@@ -33,38 +33,40 @@ st.markdown(
 st.sidebar.header("🩺 Enter Patient Data")
 
 def user_input_features():
-    data = {
-        'radius_mean': st.sidebar.number_input('Radius Mean', 0.0, 50.0, 14.0),
-        'texture_mean': st.sidebar.number_input('Texture Mean', 0.0, 50.0, 19.0),
-        'perimeter_mean': st.sidebar.number_input('Perimeter Mean', 0.0, 200.0, 90.0),
-        'area_mean': st.sidebar.number_input('Area Mean', 0.0, 3000.0, 600.0),
-        'smoothness_mean': st.sidebar.number_input('Smoothness Mean', 0.0, 1.0, 0.1),
-        'compactness_mean': st.sidebar.number_input('Compactness Mean', 0.0, 1.0, 0.2),
-        'concavity_mean': st.sidebar.number_input('Concavity Mean', 0.0, 1.0, 0.1),
-        'concave points_mean': st.sidebar.number_input('Concave Points Mean', 0.0, 1.0, 0.05),
-        'symmetry_mean': st.sidebar.number_input('Symmetry Mean', 0.0, 1.0, 0.2),
-        'fractal_dimension_mean': st.sidebar.number_input('Fractal Dimension Mean', 0.0, 1.0, 0.06),
-        'radius_se': st.sidebar.number_input('Radius SE', 0.0, 5.0, 0.3),
-        'texture_se': st.sidebar.number_input('Texture SE', 0.0, 5.0, 1.0),
-        'perimeter_se': st.sidebar.number_input('Perimeter SE', 0.0, 20.0, 2.0),
-        'area_se': st.sidebar.number_input('Area SE', 0.0, 500.0, 20.0),
-        'smoothness_se': st.sidebar.number_input('Smoothness SE', 0.0, 0.1, 0.01),
-        'compactness_se': st.sidebar.number_input('Compactness SE', 0.0, 0.5, 0.02),
-        'concavity_se': st.sidebar.number_input('Concavity SE', 0.0, 0.5, 0.02),
-        'concave points_se': st.sidebar.number_input('Concave Points SE', 0.0, 0.2, 0.01),
-        'symmetry_se': st.sidebar.number_input('Symmetry SE', 0.0, 0.5, 0.02),
-        'fractal_dimension_se': st.sidebar.number_input('Fractal Dimension SE', 0.0, 0.1, 0.01),
-        'radius_worst': st.sidebar.number_input('Radius Worst', 0.0, 50.0, 16.0),
-        'texture_worst': st.sidebar.number_input('Texture Worst', 0.0, 50.0, 25.0),
-        'perimeter_worst': st.sidebar.number_input('Perimeter Worst', 0.0, 200.0, 100.0),
-        'area_worst': st.sidebar.number_input('Area Worst', 0.0, 3000.0, 800.0),
-        'smoothness_worst': st.sidebar.number_input('Smoothness Worst', 0.0, 1.0, 0.15),
-        'compactness_worst': st.sidebar.number_input('Compactness Worst', 0.0, 1.0, 0.3),
-        'concavity_worst': st.sidebar.number_input('Concavity Worst', 0.0, 1.0, 0.3),
-        'concave points_worst': st.sidebar.number_input('Concave Points Worst', 0.0, 1.0, 0.1),
-        'symmetry_worst': st.sidebar.number_input('Symmetry Worst', 0.0, 1.0, 0.25),
-        'fractal_dimension_worst': st.sidebar.number_input('Fractal Dimension Worst', 0.0, 1.0, 0.08)
-    }
+data = {
+    'radius_mean': st.sidebar.number_input('Radius Mean', 0.0, 50.0, 25.0),
+    'texture_mean': st.sidebar.number_input('Texture Mean', 0.0, 50.0, 35.0),
+    'perimeter_mean': st.sidebar.number_input('Perimeter Mean', 0.0, 200.0, 180.0),
+    'area_mean': st.sidebar.number_input('Area Mean', 0.0, 3000.0, 2200.0),
+    'smoothness_mean': st.sidebar.number_input('Smoothness Mean', 0.0, 1.0, 0.18),
+    'compactness_mean': st.sidebar.number_input('Compactness Mean', 0.0, 1.0, 0.45),
+    'concavity_mean': st.sidebar.number_input('Concavity Mean', 0.0, 1.0, 0.40),
+    'concave points_mean': st.sidebar.number_input('Concave Points Mean', 0.0, 1.0, 0.18),
+    'symmetry_mean': st.sidebar.number_input('Symmetry Mean', 0.0, 1.0, 0.30),
+    'fractal_dimension_mean': st.sidebar.number_input('Fractal Dimension Mean', 0.0, 1.0, 0.09),
+
+    'radius_se': st.sidebar.number_input('Radius SE', 0.0, 5.0, 2.0),
+    'texture_se': st.sidebar.number_input('Texture SE', 0.0, 5.0, 3.5),
+    'perimeter_se': st.sidebar.number_input('Perimeter SE', 0.0, 20.0, 15.0),
+    'area_se': st.sidebar.number_input('Area SE', 0.0, 500.0, 350.0),
+    'smoothness_se': st.sidebar.number_input('Smoothness SE', 0.0, 0.1, 0.04),
+    'compactness_se': st.sidebar.number_input('Compactness SE', 0.0, 0.5, 0.09),
+    'concavity_se': st.sidebar.number_input('Concavity SE', 0.0, 0.5, 0.18),
+    'concave points_se': st.sidebar.number_input('Concave Points SE', 0.0, 0.2, 0.05),
+    'symmetry_se': st.sidebar.number_input('Symmetry SE', 0.0, 0.5, 0.08),
+    'fractal_dimension_se': st.sidebar.number_input('Fractal Dimension SE', 0.0, 0.1, 0.03),
+
+    'radius_worst': st.sidebar.number_input('Radius Worst', 0.0, 50.0, 35.0),
+    'texture_worst': st.sidebar.number_input('Texture Worst', 0.0, 50.0, 40.0),
+    'perimeter_worst': st.sidebar.number_input('Perimeter Worst', 0.0, 200.0, 190.0),
+    'area_worst': st.sidebar.number_input('Area Worst', 0.0, 3000.0, 2500.0),
+    'smoothness_worst': st.sidebar.number_input('Smoothness Worst', 0.0, 1.0, 0.25),
+    'compactness_worst': st.sidebar.number_input('Compactness Worst', 0.0, 1.0, 0.70),
+    'concavity_worst': st.sidebar.number_input('Concavity Worst', 0.0, 1.0, 0.75),
+    'concave points_worst': st.sidebar.number_input('Concave Points Worst', 0.0, 1.0, 0.25),
+    'symmetry_worst': st.sidebar.number_input('Symmetry Worst', 0.0, 1.0, 0.40),
+    'fractal_dimension_worst': st.sidebar.number_input('Fractal Dimension Worst', 0.0, 1.0, 0.12)
+}
     return pd.DataFrame(data, index=[0])
 
 input_df = user_input_features()
