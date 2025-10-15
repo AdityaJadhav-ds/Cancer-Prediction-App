@@ -3,9 +3,8 @@ import pickle
 import pandas as pd
 import plotly.express as px
 
-# --- Load trained model and scaler ---
+# --- Load your trained model ---
 model = pickle.load(open('Cancer_prediction_model_nb.pkl', 'rb'))
-scaler = pickle.load(open('scaler.pkl', 'rb'))  # Make sure you save the scaler during training
 
 # --- Page configuration ---
 st.set_page_config(
@@ -25,11 +24,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Sidebar: User Inputs ---
+# --- Sidebar: Inputs ---
 st.sidebar.header("🩺 Enter Patient Data")
 
 def user_input_features():
-    feature_data = {
+    data = {
         'radius_mean': st.sidebar.number_input('Radius Mean', 0.0, 50.0, 14.0),
         'texture_mean': st.sidebar.number_input('Texture Mean', 0.0, 50.0, 19.0),
         'perimeter_mean': st.sidebar.number_input('Perimeter Mean', 0.0, 200.0, 90.0),
@@ -61,46 +60,85 @@ def user_input_features():
         'symmetry_worst': st.sidebar.number_input('Symmetry Worst', 0.0, 1.0, 0.25),
         'fractal_dimension_worst': st.sidebar.number_input('Fractal Dimension Worst', 0.0, 1.0, 0.08)
     }
-    features = pd.DataFrame(feature_data, index=[0])
-    return features
+    return pd.DataFrame(data, index=[0])
 
 input_df = user_input_features()
 
-# --- Display Input Data ---
+# --- Display input data ---
 st.subheader("🧾 Patient Input Data")
 st.dataframe(input_df)
 
+# --- Define realistic ranges for out-of-range check ---
+feature_ranges = {
+    'radius_mean': (6.0, 30.0),
+    'texture_mean': (9.0, 40.0),
+    'perimeter_mean': (40.0, 190.0),
+    'area_mean': (150.0, 2500.0),
+    'smoothness_mean': (0.05, 0.2),
+    'compactness_mean': (0.0, 0.35),
+    'concavity_mean': (0.0, 0.4),
+    'concave points_mean': (0.0, 0.2),
+    'symmetry_mean': (0.1, 0.3),
+    'fractal_dimension_mean': (0.0, 0.1),
+    'radius_se': (0.1, 4.0),
+    'texture_se': (0.3, 5.0),
+    'perimeter_se': (0.5, 20.0),
+    'area_se': (6.0, 500.0),
+    'smoothness_se': (0.001, 0.05),
+    'compactness_se': (0.0, 0.1),
+    'concavity_se': (0.0, 0.2),
+    'concave points_se': (0.0, 0.06),
+    'symmetry_se': (0.0, 0.1),
+    'fractal_dimension_se': (0.0, 0.03),
+    'radius_worst': (7.0, 40.0),
+    'texture_worst': (12.0, 50.0),
+    'perimeter_worst': (50.0, 250.0),
+    'area_worst': (200.0, 3000.0),
+    'smoothness_worst': (0.05, 0.3),
+    'compactness_worst': (0.0, 1.0),
+    'concavity_worst': (0.0, 1.0),
+    'concave points_worst': (0.0, 0.3),
+    'symmetry_worst': (0.1, 0.5),
+    'fractal_dimension_worst': (0.02, 0.2)
+}
+
 # --- Prediction ---
 if st.button('🔍 Predict'):
-    # 1️⃣ Scale input
-    input_scaled = scaler.transform(input_df)
+    out_of_range = False
+    for col in input_df.columns:
+        min_val, max_val = feature_ranges[col]
+        if input_df[col][0] < min_val or input_df[col][0] > max_val:
+            out_of_range = True
+            break
 
-    # 2️⃣ Make prediction
-    prediction = model.predict(input_scaled)[0]
-    prediction_proba = model.predict_proba(input_scaled)[0]
-
-    st.subheader("📊 Prediction Result")
-    if prediction == 1:
-        st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
+    if out_of_range:
+        st.error("⚠️ One or more inputs are outside realistic medical ranges. **High chance of Cancer.**")
     else:
-        st.success("✅ The model predicts: **No Cancer (Benign)**")
+        prediction = model.predict(input_df)[0]
+        prediction_proba = model.predict_proba(input_df)[0]
 
-    # 3️⃣ Probability chart
-    proba_df = pd.DataFrame({
-        'Condition': ['Benign', 'Malignant'],
-        'Probability': prediction_proba
-    })
-    fig = px.bar(
-        proba_df,
-        x='Condition',
-        y='Probability',
-        color='Probability',
-        color_continuous_scale='RdBu',
-        text='Probability',
-        title="Prediction Probabilities"
-    )
-    fig.update_traces(texttemplate='%{text:.2f}', textposition='outside')
-    st.plotly_chart(fig, use_container_width=True)
+        st.subheader("📊 Prediction Result")
+        if prediction == 1:
+            st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
+        else:
+            st.success("✅ The model predicts: **No Cancer (Benign)**")
+
+        # Probability chart
+        proba_df = pd.DataFrame({
+            'Condition': ['Benign', 'Malignant'],
+            'Probability': prediction_proba
+        })
+        fig = px.bar(
+            proba_df,
+            x='Condition',
+            y='Probability',
+            color='Probability',
+            color_continuous_scale='RdBu',
+            text='Probability',
+            title="Prediction Probabilities"
+        )
+        fig.update_traces(texttemplate='%{text:.2f}', textposition='outside')
+        st.plotly_chart(fig, use_container_width=True)
 
 # --- Footer ---
 st.markdown("---")
