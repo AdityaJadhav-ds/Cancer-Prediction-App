@@ -1,6 +1,5 @@
 import streamlit as st
 import pickle
-import numpy as np
 import pandas as pd
 import plotly.express as px
 
@@ -25,32 +24,51 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Sidebar for user input ---
+# --- Sidebar: User Inputs ---
 st.sidebar.header("🩺 Enter Patient Data")
 
 def user_input_features():
-    # Collect user input
-    mean_radius = st.sidebar.slider('Mean Radius', 0.0, 50.0, 14.0)
-    mean_texture = st.sidebar.slider('Mean Texture', 0.0, 50.0, 19.0)
-    mean_perimeter = st.sidebar.slider('Mean Perimeter', 0.0, 200.0, 90.0)
-    mean_area = st.sidebar.slider('Mean Area', 0.0, 3000.0, 600.0)
-    mean_smoothness = st.sidebar.slider('Mean Smoothness', 0.0, 1.0, 0.1)
-
-    data = {
-        'Mean Radius': mean_radius,
-        'Mean Texture': mean_texture,
-        'Mean Perimeter': mean_perimeter,
-        'Mean Area': mean_area,
-        'Mean Smoothness': mean_smoothness
+    feature_data = {
+        'radius_mean': st.sidebar.number_input('Radius Mean', 0.0, 50.0, 14.0),
+        'texture_mean': st.sidebar.number_input('Texture Mean', 0.0, 50.0, 19.0),
+        'perimeter_mean': st.sidebar.number_input('Perimeter Mean', 0.0, 200.0, 90.0),
+        'area_mean': st.sidebar.number_input('Area Mean', 0.0, 3000.0, 600.0),
+        'smoothness_mean': st.sidebar.number_input('Smoothness Mean', 0.0, 1.0, 0.1),
+        'compactness_mean': st.sidebar.number_input('Compactness Mean', 0.0, 1.0, 0.2),
+        'concavity_mean': st.sidebar.number_input('Concavity Mean', 0.0, 1.0, 0.1),
+        'concave points_mean': st.sidebar.number_input('Concave Points Mean', 0.0, 1.0, 0.05),
+        'symmetry_mean': st.sidebar.number_input('Symmetry Mean', 0.0, 1.0, 0.2),
+        'fractal_dimension_mean': st.sidebar.number_input('Fractal Dimension Mean', 0.0, 1.0, 0.06),
+        'radius_se': st.sidebar.number_input('Radius SE', 0.0, 5.0, 0.3),
+        'texture_se': st.sidebar.number_input('Texture SE', 0.0, 5.0, 1.0),
+        'perimeter_se': st.sidebar.number_input('Perimeter SE', 0.0, 20.0, 2.0),
+        'area_se': st.sidebar.number_input('Area SE', 0.0, 500.0, 20.0),
+        'smoothness_se': st.sidebar.number_input('Smoothness SE', 0.0, 0.1, 0.01),
+        'compactness_se': st.sidebar.number_input('Compactness SE', 0.0, 0.5, 0.02),
+        'concavity_se': st.sidebar.number_input('Concavity SE', 0.0, 0.5, 0.02),
+        'concave points_se': st.sidebar.number_input('Concave Points SE', 0.0, 0.2, 0.01),
+        'symmetry_se': st.sidebar.number_input('Symmetry SE', 0.0, 0.5, 0.02),
+        'fractal_dimension_se': st.sidebar.number_input('Fractal Dimension SE', 0.0, 0.1, 0.01),
+        'radius_worst': st.sidebar.number_input('Radius Worst', 0.0, 50.0, 16.0),
+        'texture_worst': st.sidebar.number_input('Texture Worst', 0.0, 50.0, 25.0),
+        'perimeter_worst': st.sidebar.number_input('Perimeter Worst', 0.0, 200.0, 100.0),
+        'area_worst': st.sidebar.number_input('Area Worst', 0.0, 3000.0, 800.0),
+        'smoothness_worst': st.sidebar.number_input('Smoothness Worst', 0.0, 1.0, 0.15),
+        'compactness_worst': st.sidebar.number_input('Compactness Worst', 0.0, 1.0, 0.3),
+        'concavity_worst': st.sidebar.number_input('Concavity Worst', 0.0, 1.0, 0.3),
+        'concave points_worst': st.sidebar.number_input('Concave Points Worst', 0.0, 1.0, 0.1),
+        'symmetry_worst': st.sidebar.number_input('Symmetry Worst', 0.0, 1.0, 0.25),
+        'fractal_dimension_worst': st.sidebar.number_input('Fractal Dimension Worst', 0.0, 1.0, 0.08)
     }
-    features = pd.DataFrame(data, index=[0])
+
+    features = pd.DataFrame(feature_data, index=[0])
     return features
 
 input_df = user_input_features()
 
-# --- Display user input in a nice table ---
+# --- Display Input Data ---
 st.subheader("🧾 Patient Input Data")
-st.dataframe(input_df.style.background_gradient(cmap='Blues'))
+st.dataframe(input_df)
 
 # --- Prediction ---
 if st.button('🔍 Predict'):
@@ -59,23 +77,22 @@ if st.button('🔍 Predict'):
 
     st.subheader("📊 Prediction Result")
 
-    # Display result with a clear, colored alert
     if prediction == 1:
         st.error("⚠️ The model predicts: **Cancer Detected (Malignant)**")
     else:
         st.success("✅ The model predicts: **No Cancer (Benign)**")
 
-    # Display probability as bar chart
+    # Prediction probabilities chart
     proba_df = pd.DataFrame({
         'Condition': ['Benign', 'Malignant'],
         'Probability': prediction_proba
     })
 
     fig = px.bar(
-        proba_df, 
-        x='Condition', 
-        y='Probability', 
-        color='Probability', 
+        proba_df,
+        x='Condition',
+        y='Probability',
+        color='Probability',
         color_continuous_scale='RdBu',
         text='Probability',
         title="Prediction Probabilities"
