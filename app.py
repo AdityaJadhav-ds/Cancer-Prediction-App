@@ -111,9 +111,8 @@ if st.button('🔍 Predict'):
             out_of_range = True
             break
 
-    if out_of_range:
-        st.error("⚠️ One or more inputs are outside realistic medical ranges. **High chance of Cancer.**")
-    else:
+    
+    elif:
         prediction = model.predict(input_df)[0]
         prediction_proba = model.predict_proba(input_df)[0]
 
