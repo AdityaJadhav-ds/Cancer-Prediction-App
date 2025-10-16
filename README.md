@@ -1,3 +1,1 @@
 # Cancer-Prediction-App
-
-sd
