@@ -1,2 +1,1 @@
 # Cancer-Prediction-App
-s
