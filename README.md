@@ -37,8 +37,8 @@
 
 1. Clone the repo:
 ```bash
-git clone https://github.com/<your-username>/cancer-prediction-app.git
-cd cancer-prediction-app
+git clone https://github.com/AdityaJadhav-ds/Cancer-Prediction-App.git
+cd Cancer-Prediction-App
 
 
 
